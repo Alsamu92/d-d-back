@@ -9,10 +9,11 @@ const subirUser = async (req, res, next) => {
 
   try {
     await User.syncIndexes();
-  
+  const medallas=[]
     const { username} = req.body;
     const userExiste = await User.findOne(
-      { username: req.body.username},
+      { username: req.body.username
+     },
     );
     if (!userExiste) {
       const newUser = new User({ ...req.body});
@@ -189,7 +190,7 @@ const BuscarUser = async (req, res) => {
 //todo-----------------------------------------------------------------------------------------------------------------------------------------
 //todo CONTROLADOR BUSCAR Todos
 
-const getAll = async (rq, res) => {
+const getAll = async (req, res) => {
   try {
     const todosLosUsers = await User.find();
     if (todosLosUsers.length > 0) {
@@ -209,24 +210,62 @@ const getAll = async (rq, res) => {
 //todo CONTROLADOR BUSCAR POR NOMBRE
 const buscarNameUser = async (req, res) => {
   try {
-    const { username } = req.params;
-    const nombreUser = await User.find({ username });
-    if (nombreUser.length > 0) {
+    const { name } = req.params;
+    console.log(name)
+    const nombreUser = await User.findOne({ username:name });
+    
+    if (nombreUser) {
       return res.status(200).json(nombreUser);
     } else {
-      return res.status(404).json('No se ha encontado este usuario');
+      return res.status(404).json('No se ha encontrado este usuario');
     }
   } catch (error) {
-    return res.status(404).json({
-      error: 'No encontrado',
+    return res.status(500).json({
+      error: 'Error interno del servidor',
       message: error.message,
     });
   }
 };
 //todo---------------------------------------------------------------------
+//todo---------------------------------------------------------------------
+//todo-----------CONTROLADOR PARA AÑADIR MEDALLA-------------------
+
+const medalla = async (req, res, next) => {
+  try {
+    const { medalla } = req.params;
+    const { _id, medallas } = req.user;
+
+    if (!medallas.includes(medalla)) {
+      try {
+        await User.findByIdAndUpdate(_id, {
+          $push: { medallas: medalla },
+        });
+        
+          return res.status(200).json({
+            userActualizado: await User.findById(_id),
+            action: `Metida la medalla ${medalla}`,
+          });
+       
+      } catch (error) {
+        return res.status(404).json({
+          error: 'Error al actualizar push',
+          message: error.message,
+        });
+      }
+    
+     
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: 'Error general',
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   subirUser,
+  medalla,
   borrarUser,
 autologin,
   login,
