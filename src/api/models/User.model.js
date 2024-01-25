@@ -6,6 +6,12 @@ const UserSchema = new mongoose.Schema(
     records:[{ type: String}],
     username: { type: String, required: true, trim: true, unique: true },
     medallas: [{type: String, trim: true,required: true}] ,
+    experiencia: {type: Number, trim: true,required: true} ,
+  lirena: {type: Number, trim: true} ,
+    bruster: {type: Number, trim: true} ,
+    krista: {type: Number, trim: true} ,
+    furtur: {type: Number, trim: true} ,
+    darion: {type: Number, trim: true} ,
     password: {
       type: String,
       required: true,

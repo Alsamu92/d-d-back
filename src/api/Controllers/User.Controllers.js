@@ -16,7 +16,7 @@ const subirUser = async (req, res, next) => {
      },
     );
     if (!userExiste) {
-      const newUser = new User({ ...req.body});
+      const newUser = new User({ ...req.body,experiencia: 0,lirena:0,bruster:0,krista:0,furtur:0,darion:0});
       try {
         const usuarioGuardado = await newUser.save();
         if(usuarioGuardado){
@@ -262,9 +262,41 @@ const medalla = async (req, res, next) => {
     });
   }
 };
+//! ------------------- UPDATE USER ----------------------------
+const update = async (req, res, next) => {
+
+  try {
+    await User.syncIndexes(); 
+    const patchUser = new User(req.body); 
+
+
+    //! esta info no quiero que me la cambie
+    patchUser._id = req.user._id;
+    patchUser.password = req.user.password;
+    patchUser.experiencia = (req.user.experiencia)+(req.body.experiencia);
+ 
+
+    try {
+     const updateUser= await User.findByIdAndUpdate(req.user._id, patchUser); 
+    
+      return res.status(200).json({ updateUser });
+    } catch (error) {
+      return res.status(404).json({
+        message: 'Error al actualizar el usuario ❌',
+        error: error.message,
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Error general',
+      error: error.message,
+    });
+  }
+};
 
 module.exports = {
   subirUser,
+  update,
   medalla,
   borrarUser,
 autologin,

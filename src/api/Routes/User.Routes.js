@@ -10,6 +10,7 @@ const {
   BuscarUser,
   autologin,
   medalla,
+  update,
 
 } = require('../Controllers/User.Controllers');
 
@@ -21,6 +22,7 @@ UserRoutes.get('/:id', BuscarUser);
 UserRoutes.patch('/medalla/:medalla', [isAuth],medalla);
 UserRoutes.post('/', subirUser);
 UserRoutes.post('/autologin', autologin);
+UserRoutes.patch('/actualizar',[isAuth], update);
 
 
 UserRoutes.post('/login', login);
