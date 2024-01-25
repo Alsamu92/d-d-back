@@ -272,6 +272,7 @@ const update = async (req, res, next) => {
 
     //! esta info no quiero que me la cambie
     patchUser._id = req.user._id;
+    patchUser.medallas = req.user.medallas;
     patchUser.password = req.user.password;
     patchUser.experiencia = (req.user.experiencia)+(req.body.experiencia);
  
