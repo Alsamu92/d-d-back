@@ -280,7 +280,7 @@ const update = async (req, res, next) => {
     try {
      const updateUser= await User.findByIdAndUpdate(req.user._id, patchUser); 
     
-      return res.status(200).json({ updateUser });
+      return res.status(200).json({ updateUser,patchUser });
     } catch (error) {
       return res.status(404).json({
         message: 'Error al actualizar el usuario ❌',
